@@ -14,18 +14,17 @@ using ThreadVector = std::vector< std::thread >;
 class UniqueThreadPool
 {
 public:
-    static UniqueThreadPool* getpool( );
+    UniqueThreadPool( UniqueThreadPool &other ) = delete;
     ~UniqueThreadPool( );
+    void operator=( const UniqueThreadPool & ) = delete;
+    static UniqueThreadPool* getpool( );
     void add_task( std::function< void() > );
     void start( );
     void end( );
-
-    UniqueThreadPool( UniqueThreadPool &other ) = delete;
-    void operator=( const UniqueThreadPool & ) = delete;
-
+    
 private:
-    static bool m_created;
     UniqueThreadPool( );
+    static bool m_created;
     std::atomic<bool> m_stop = false;
     std::mutex m_mutex_queue;
     TaskQueue m_tasks;
@@ -79,7 +78,7 @@ void UniqueThreadPool::end( )
         }
     }   
 }
-
+//implement into if c++17 functional
 void UniqueThreadPool::do_tasks( )
 {
     while ( !m_stop )
@@ -106,7 +105,3 @@ void UniqueThreadPool::start( )
         th = std::thread( &UniqueThreadPool::do_tasks, this );
     }   
 }
-
-
-
-
