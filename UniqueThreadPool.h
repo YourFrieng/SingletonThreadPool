@@ -78,7 +78,6 @@ void UniqueThreadPool::end( )
         }
     }   
 }
-//implement into if c++17 functional
 void UniqueThreadPool::do_tasks( )
 {
     while ( !m_stop )
@@ -90,7 +89,7 @@ void UniqueThreadPool::do_tasks( )
             std::this_thread::sleep_for( 500ms );
             continue;
         }
-        auto fun = m_tasks.front( );
+        auto& fun = m_tasks.front( );
         m_tasks.pop( );
         locker.unlock( );
         fun( );
